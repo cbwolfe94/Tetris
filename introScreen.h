@@ -8,15 +8,12 @@
 class introScreen {
 private:
 	WINDOW* window;
-	//gameScreen* gameScreen;
-	//highScoreScreen* highScoreScreen;
-	//creditsScreen* creditsScreen;
-	void createWindow();
+	void createMainWindow();
 	void loadAssets();
 	void loadMenu();
 public:
 	introScreen();
-
+	void eventLoop();
 };
 
 
