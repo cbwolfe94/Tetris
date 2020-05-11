@@ -6,11 +6,11 @@
 
 introScreen::introScreen() {
 	WINDOW* window;
-	createWindow();
+	createMainWindow();
 	loadAssets();
 	loadMenu();
 }
-void introScreen::createWindow () {
+void introScreen::createMainWindow() {
 	int startY, startX, yMax, xMax;
 	startY = startX = 0;
 	getmaxyx(stdscr, yMax, xMax);
@@ -183,6 +183,8 @@ void introScreen::loadMenu() {
 	int choice;
 	int highlight = 0;
 	while(1) {
+		//choice = 0;
+		//wrefresh(window);
 		refresh();
 		for (int i = 0; i < 4; i++) {
 			if (i == highlight) {
@@ -192,12 +194,13 @@ void introScreen::loadMenu() {
 			mvwprintw(window, i + yMax/2, xMax/2 - 10, choices[i].c_str());
 			wattroff(window, A_REVERSE);
 
-}
+}		//printw(" Choice before: %d ", choice);
 		choice = wgetch(window);
-
+		//printw(" Choice after: %d ", choice);
 	
 		switch (choice) {
 			case KEY_UP:
+				//printw(" In key up ");
 				highlight--;
 				if (highlight == -1) {
 					highlight = 0;
@@ -218,10 +221,29 @@ void introScreen::loadMenu() {
 				break;
 			
 		}
+		if (option == 0) {
+			printw(" %d ", highlight);
+			GameScreen* newGame = new GameScreen();
+			newGame->eventLoop();
+			delete newGame;
+			createMainWindow();
+			loadAssets();
+			keypad(window, true);
+		//	wrefresh(window);
+			option = -1;
+		}
 		if (option == 1) {
+			option = -1;
 			return;
 		}
-		
+
+		if (option == 2) {
+			
+		}
+
+		if (option == 3) {
+			
+		}
 }
 }
 
