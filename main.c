@@ -9,12 +9,13 @@ int main() {
     noecho();
     clear();
     start_color();
+
     //init_pair()
 
-
+    //tetromino* O_Block = createTetromino("O Block");
     
     endwin();
-    //tetromino* O_Block = createTetromino("O Block");
+    
     
 
     return 0;
