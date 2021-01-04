@@ -9,12 +9,9 @@ struct tetromino {
     // int startPositionY;
     
     //Location of cells of each tetromino block
-    // int firstCellPosition;
-    // int secondCellPosition;
-    // int thirdCellPosition;
-    // int fourthCellPosition;
+    int cellPositions;
 
-    //Difference kinds of tetromino i.e. I, O, T, S, Z J, and L
+    //Difference kinds of tetromino i.e. I, O, T, S, Z, J, and L
     char* typeOfBlock;
 
     //int fallSpeed;
@@ -26,8 +23,6 @@ tetromino* createTetromino(char* typeOfBlock) {
     tetromino* block = (tetromino*)malloc(sizeof(tetromino));
     block->typeOfBlock = (char*)malloc(strlen(typeOfBlock));
     strcpy(block->typeOfBlock, typeOfBlock);
-    
-
     return block;
 }
 
@@ -47,10 +42,5 @@ void displayTetromino(tetromino* block) {
 }
 
 void freeTetromino(tetromino* block) {
-    free(block->typeOfBlock);
-    free(block);
-}
-
-void printContentsOfTetromino(tetromino* block) {
-    printf("This is an %s.\n", block->typeOfBlock);
+    return;
 }
