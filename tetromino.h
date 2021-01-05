@@ -1,6 +1,9 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ncurses.h>
 #ifndef TETROMINO_H
 #define TETROMINO_H
-#include <ncurses.h> 
 
 
 // #define I_BLOCK_COLOR = COLOR_RED;
@@ -23,7 +26,7 @@
 
 typedef struct tetromino tetromino;
 
-tetromino* createTetromino(char* typeOfBlock);
+tetromino* createTetromino();
 
 void rotateTetromino(tetromino* block, char* direction);
 
