@@ -1,7 +1,6 @@
+
 #include "tetromino.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+
 
 struct tetromino {
     //Default fall position for all tetromino blocks
@@ -9,20 +8,17 @@ struct tetromino {
     // int startPositionY;
     
     //Location of cells of each tetromino block
-    int cellPositions;
-
-    //Difference kinds of tetromino i.e. I, O, T, S, Z, J, and L
-    char* typeOfBlock;
+    int blockPosition;
 
     //int fallSpeed;
 
 };
 
-tetromino* createTetromino(char* typeOfBlock) {
+tetromino* createTetromino() {
     
     tetromino* block = (tetromino*)malloc(sizeof(tetromino));
-    block->typeOfBlock = (char*)malloc(strlen(typeOfBlock));
-    strcpy(block->typeOfBlock, typeOfBlock);
+    // block->typeOfBlock = (char*)malloc(strlen(typeOfBlock));
+    // strcpy(block->typeOfBlock, typeOfBlock);
     return block;
 }
 
@@ -37,8 +33,9 @@ void moveTetromino(tetromino* block, char* direction) {
 }
 
 void displayTetromino(tetromino* block) {
-    return;
-
+    for (int row = 0; row < 3; row++) {
+        mvaddstr(block->blockPosition[row][0], block->blockPosition[row][1], "[]");
+    }
 }
 
 void freeTetromino(tetromino* block) {
