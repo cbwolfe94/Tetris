@@ -15,7 +15,7 @@
 // #define L_BLOCK_COLOR = COLOR_WHITE;
 
 
-// const int DEFAULT_STARTING_COORDINATE;
+
 // const int I_BLOCK_COORDINATES = ;
 // const int O_BLOCK_COORDINATES;
 // const int T_BLOCK_COORDINATES;
