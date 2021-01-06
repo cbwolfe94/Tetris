@@ -26,10 +26,11 @@ int main() {
     // init_pair(7, COLOR_WHITE, COLOR_WHITE);
     //tetromino* O_Block = createTetromino("O Block");
 
-    tetromino piece = {5};
-    //piece->blockPosition = {4, 35}, {5, 35}, {6, 35}, {7,35};
+    tetromino* piece = createTetromino();
+    //piece->blockPosition = 
     
     attron(COLOR_PAIR(1));
+    displayTetromino(piece);
     // mvaddstr(4, 35, "[]");
     // mvaddstr(5, 35, "[]");
     // mvaddstr(6, 35, "[]");
