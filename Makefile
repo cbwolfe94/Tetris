@@ -17,5 +17,6 @@ main.o: main.c game.h
 	$(CC) -c main.c $(FLAGS)
 
 .PHONY = clean
+
 clean:
 	rm -f tetris *.o
