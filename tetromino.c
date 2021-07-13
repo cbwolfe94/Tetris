@@ -1,3 +1,5 @@
+#include <time.h>
+#include <stdlib.h>
 #include "tetromino.h"
 
 
@@ -40,12 +42,20 @@ void tetromino_display(struct tetromino block)
     attroff(COLOR_PAIR(block.color_pair));
 }
 
-void display_all_tetrominos(struct tetromino *list_of_blocks) {
+void display_all_tetrominos(struct tetromino *list_of_blocks)
+{
     for (int i = 0; i < 7; ++i) {
         tetromino_display(list_of_blocks[i]);
     }
 }
 
-void tetromino_free(struct tetromino *block) {
+void tetromino_free(struct tetromino *block)
+{
     return;
+}
+
+int get_random_number(void)
+{
+    srand(time(NULL));
+    return rand() & 7;
 }
