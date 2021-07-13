@@ -5,17 +5,20 @@
 #include <string.h>
 #include <ncurses.h>
 
+enum Colors {
+    I_BLOCK = COLOR_RED,
+    O_BLOCK = COLOR_GREEN,
+    T_BLOCK = COLOR_YELLOW,
+    S_BLOCK = COLOR_BLUE,
+    Z_BLOCK = COLOR_MAGENTA,
+    J_BLOCK = COLOR_CYAN,
+    L_BLOCK = COLOR_WHITE
+};
 
-
-#define I_BLOCK_COLOR COLOR_RED
-#define O_BLOCK_COLOR COLOR_GREEN
-#define T_BLOCK_COLOR COLOR_YELLOW
-#define S_BLOCK_COLOR COLOR_BLUE
-#define Z_BLOCK_COLOR COLOR_MAGENTA
-#define J_BLOCK_COLOR COLOR_CYAN
-#define L_BLOCK_COLOR COLOR_WHITE
-
-
+struct tetromino {
+    int color_pair;
+    int block_position[4][2];
+};
 
 static int I_BLOCK_COORDINATES[4][2] = {{4, 35}, {5, 35}, {6, 35}, {7, 35}};
 
@@ -31,23 +34,24 @@ static int J_BLOCK_COORDINATES[4][2] = {{21, 35}, {22, 35}, {23, 35}, {23, 33}};
 
 static int L_BLOCK_COORDINATES[4][2] = {{25, 35}, {26, 35}, {27, 35}, {27, 37}};
 
-struct tetromino {
-    int color_pair;
-    int block_position[4][2];
-};
+
 
 struct tetromino tetrominos[7];
 
-void create_tetrominos(void);
+void default_tetrominos_create(void);
 
-void rotate_tetromino(struct tetromino *block, char direction);
+void tetromino_initialize(int color, int coordinates[4][2]);
 
-void move_tetromino(struct tetromino *block, char direction);
+void new_tetromino_create(void);
 
-void display_tetromino(struct tetromino block);
+void tetromino_rotate(struct tetromino *block, char direction);
+
+void tetromino_move(struct tetromino *block, char direction);
+
+void tetromino_display(struct tetromino block);
 
 void display_all_tetrominos(struct tetromino *list_of_blocks);
 
-void free_tetromino(struct tetromino *block);
+void tetromino_free(struct tetromino *block);
 
 #endif

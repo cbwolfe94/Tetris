@@ -1,36 +1,37 @@
 #include "tetromino.h"
 
 
-void create_tetrominos(void)
+void default_tetrominos_create(void)
 {
-    tetrominos[0].color_pair = I_BLOCK_COLOR;
-    tetrominos[1].color_pair = O_BLOCK_COLOR;
-    tetrominos[2].color_pair = T_BLOCK_COLOR;
-    tetrominos[3].color_pair = S_BLOCK_COLOR;
-    tetrominos[4].color_pair = Z_BLOCK_COLOR;
-    tetrominos[5].color_pair = J_BLOCK_COLOR;
-    tetrominos[6].color_pair = L_BLOCK_COLOR;
-    memcpy(tetrominos[0].block_position, I_BLOCK_COORDINATES, 4*2*sizeof(int));
-    memcpy(tetrominos[1].block_position, O_BLOCK_COORDINATES, 4*2*sizeof(int));
-    memcpy(tetrominos[2].block_position, T_BLOCK_COORDINATES, 4*2*sizeof(int));
-    memcpy(tetrominos[3].block_position, S_BLOCK_COORDINATES, 4*2*sizeof(int));
-    memcpy(tetrominos[4].block_position, Z_BLOCK_COORDINATES, 4*2*sizeof(int));
-    memcpy(tetrominos[5].block_position, J_BLOCK_COORDINATES, 4*2*sizeof(int));
-    memcpy(tetrominos[6].block_position, L_BLOCK_COORDINATES, 4*2*sizeof(int));
+    tetromino_initialize(I_BLOCK, I_BLOCK_COORDINATES);
+    tetromino_initialize(O_BLOCK, O_BLOCK_COORDINATES);
+    tetromino_initialize(T_BLOCK, T_BLOCK_COORDINATES);
+    tetromino_initialize(S_BLOCK, S_BLOCK_COORDINATES);
+    tetromino_initialize(Z_BLOCK, Z_BLOCK_COORDINATES);
+    tetromino_initialize(J_BLOCK, J_BLOCK_COORDINATES);
+    tetromino_initialize(L_BLOCK, L_BLOCK_COORDINATES);
 }
 
-void rotate_tetromino(struct tetromino *block, char direction)
+void new_tetromino_create(void);
+
+void tetromino_initialize(int color, int coordinates[4][2])
+{
+    tetrominos[color - 1].color_pair = color;
+    memcpy(tetrominos[color - 1].block_position, coordinates, 4*2*sizeof(int));
+}
+
+void tetromino_rotate(struct tetromino *block, char direction)
 {
 
     return;
 }
 
-void move_tetromino(struct tetromino *block, char direction)
+void tetromino_move(struct tetromino *block, char direction)
 {
     return;
 }
 
-void display_tetromino(struct tetromino block)
+void tetromino_display(struct tetromino block)
 {
     attron(COLOR_PAIR(block.color_pair));
     for (int i = 0; i < 4; ++i) {
@@ -40,11 +41,11 @@ void display_tetromino(struct tetromino block)
 }
 
 void display_all_tetrominos(struct tetromino *list_of_blocks) {
-    for (int i = 0; i < 6; ++i) {
-        display_tetromino(list_of_blocks[i]);
+    for (int i = 0; i < 7; ++i) {
+        tetromino_display(list_of_blocks[i]);
     }
 }
 
-void free_tetromino(struct tetromino *block) {
+void tetromino_free(struct tetromino *block) {
     return;
 }

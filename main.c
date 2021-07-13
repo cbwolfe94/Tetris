@@ -3,10 +3,10 @@
 #include "game.h"
 #include "tetromino.h"
 
-int main() {
+int main()
+{
     int start_x, start_y, y_max, x_max;
 	start_x = start_y = 0;
-    
 
     initscr();
     cbreak();
@@ -23,7 +23,8 @@ int main() {
     init_pair(5, COLOR_MAGENTA, COLOR_MAGENTA);
     init_pair(6, COLOR_CYAN, COLOR_CYAN);
     init_pair(7, COLOR_WHITE, COLOR_WHITE);
-    create_tetrominos();
+
+    default_tetrominos_create();
     //display_tetromino(&tetrominos[1]);
     display_all_tetrominos(tetrominos);    
     refresh();
@@ -37,6 +38,5 @@ int main() {
         printf("\n");
     }*/
     
-
     return 0;
 }
