@@ -54,4 +54,6 @@ void display_all_tetrominos(struct tetromino *list_of_blocks);
 
 void tetromino_free(struct tetromino *block);
 
+int get_random_number(void);
+
 #endif

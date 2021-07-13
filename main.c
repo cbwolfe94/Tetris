@@ -7,6 +7,7 @@ int main()
 {
     int start_x, start_y, y_max, x_max;
 	start_x = start_y = 0;
+    
 
     initscr();
     cbreak();
@@ -26,7 +27,7 @@ int main()
 
     default_tetrominos_create();
     //display_tetromino(&tetrominos[1]);
-    display_all_tetrominos(tetrominos);    
+    tetromino_display(tetrominos[get_random_number()]);   
     refresh();
     sleep(5);
     endwin();
