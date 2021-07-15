@@ -10,12 +10,14 @@ int main()
     
 
     initscr();
-    cbreak();
+    //cbreak();
     noecho();
     clear();
+    curs_set(false);
 	getmaxyx(stdscr, y_max, x_max);
 	WINDOW* window = newwin(y_max, x_max, start_y, start_x);
     wrefresh(window);
+    nodelay(window, true);
     start_color();
     init_pair(1, COLOR_RED, COLOR_RED);
     init_pair(2, COLOR_GREEN, COLOR_GREEN);
@@ -26,18 +28,30 @@ int main()
     init_pair(7, COLOR_WHITE, COLOR_WHITE);
 
     default_tetrominos_create();
-    //display_tetromino(&tetrominos[1]);
-    tetromino_display(tetrominos[get_random_number()]);   
-    refresh();
-    sleep(5);
+
+    struct tetromino *block = new_tetromino_create();
+
+    int ch;
+
+    while(true) {
+        erase();
+        ch = wgetch(window);
+        //printw("   %i", ch);
+        if (ch == 32) {
+            //tetromino_rotate(block);
+        }
+        else {
+            tetromino_move(block, ch);
+        }
+        
+        tetromino_display(block);
+        refresh();
+        //wrefresh(stdscr);
+        
+    }   
+    
     endwin();
 
-    /*for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 2; ++j) {
-            printf("%d ", tetrominos[0].cell_positions[i][j]);
-        }
-        printf("\n");
-    }*/
     
     return 0;
 }
