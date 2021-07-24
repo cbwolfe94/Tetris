@@ -7,8 +7,27 @@ int main()
 {
     int start_x, start_y, y_max, x_max;
 	start_x = start_y = 0;
+    /*
+    int ch;
+    default_tetrominos_create();
+    struct tetromino *test_block = new_tetromino_create();
+    printf("Original Tetromino\n");
+    print_tetromino(test_block);
+    printf("\n");
+    while(true) {
+        ch = getchar();
+        if (ch == 32) {
+            x_offset--;
+            printf("%f\n", x_offset);
+        }
+        if (ch == 'a'){
+            tetromino_move(test_block, 67);
+            tetromino_rotate(test_block);
+            printf("%f\n", x_offset);
+            //print_tetromino(test_block);
+        }
+    }*/
     
-
     initscr();
     //cbreak();
     noecho();
@@ -38,7 +57,7 @@ int main()
         ch = wgetch(window);
         //printw("   %i", ch);
         if (ch == 32) {
-            //tetromino_rotate(block);
+            tetromino_rotate(block);
         }
         else {
             tetromino_move(block, ch);
@@ -48,10 +67,7 @@ int main()
         refresh();
         //wrefresh(stdscr);
         
-    }   
-    
+    }
     endwin();
-
-    
     return 0;
 }

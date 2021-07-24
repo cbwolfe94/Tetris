@@ -17,56 +17,64 @@ enum Colors {
 
 struct tetromino {
     int color_pair;
-    int block_position[4][2];
+    float block_position[4][2];
+    char type_of_block;
 };
 
-static int I_BLOCK_COORDINATES[4][2] = {{4, 35}, 
-                                        {5, 35}, 
-                                        {6, 35}, 
-                                        {7, 35}
+static float x_offset = 100;
+static float y_offset = 6;
+
+static float I_BLOCK_COORDINATES[4][2] = {{100, 4}, 
+                                        {100, 5}, 
+                                        {100, 6}, 
+                                        {100, 7}
                                         };
 
-static int O_BLOCK_COORDINATES[4][2] = {{9, 35}, 
-                                        {9, 37}, 
-                                        {10, 35}, 
-                                        {10, 37}
+static float O_BLOCK_COORDINATES[4][2] = {{100, 5}, 
+                                        {102, 5}, 
+                                        {100, 6}, 
+                                        {102, 6}
                                         };
 
-static int T_BLOCK_COORDINATES[4][2] = {{12, 33}, 
-                                        {12, 35}, 
-                                        {12, 37}, 
-                                        {13, 35}
+static float T_BLOCK_COORDINATES[4][2] = {{98, 6}, 
+                                        {102, 6}, 
+                                        {100, 6}, 
+                                        {100, 7}
                                         };
 
-static int S_BLOCK_COORDINATES[4][2] = {{15, 37}, 
-                                        {15, 35},
-                                        {16, 35}, 
-                                        {16, 33}
+static float S_BLOCK_COORDINATES[4][2] = {{102, 5}, 
+                                        {100, 5},
+                                        {100, 6}, 
+                                        {98, 6}
                                         };
 
-static int Z_BLOCK_COORDINATES[4][2] = {{18, 33}, 
-                                        {18, 35}, 
-                                        {19, 35}, 
-                                        {19, 37}
+static float Z_BLOCK_COORDINATES[4][2] = {{98, 5}, 
+                                        {100, 5}, 
+                                        {100, 6}, 
+                                        {102, 6}
                                         };
 
-static int J_BLOCK_COORDINATES[4][2] = {{21, 35}, 
-                                        {22, 35}, 
-                                        {23, 35}, 
-                                        {23, 33}
+static float J_BLOCK_COORDINATES[4][2] = {{100, 4}, 
+                                        {100, 5}, 
+                                        {100, 6}, 
+                                        {98, 6}
                                         };
 
-static int L_BLOCK_COORDINATES[4][2] = {{25, 35}, 
-                                        {26, 35}, 
-                                        {27, 35}, 
-                                        {27, 37}
+static float L_BLOCK_COORDINATES[4][2] = {{100, 4}, 
+                                        {100, 5}, 
+                                        {100, 6}, 
+                                        {102, 6}
                                         };
+
+
+static char types_of_blocks[7] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
+
 
 struct tetromino tetrominos[7];
 
 void default_tetrominos_create(void);
 
-void tetromino_initialize(int color, int coordinates[4][2]);
+void tetromino_initialize(int color, float coordinates[4][2]);
 
 struct tetromino* new_tetromino_create(void);
 
@@ -81,5 +89,7 @@ void tetromino_display(struct tetromino *block);
 void tetromino_free(struct tetromino *block);
 
 int get_random_number(void);
+
+void print_tetromino(struct tetromino *block);
 
 #endif
