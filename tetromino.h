@@ -5,6 +5,9 @@
 #include <string.h>
 #include <ncurses.h>
 
+#define DEFAULT_X  100
+#define DEFAULT_Y  6
+
 enum Colors {
     I_BLOCK = COLOR_RED,
     O_BLOCK = COLOR_GREEN,
@@ -16,80 +19,41 @@ enum Colors {
 };
 
 struct tetromino {
+    struct tetromino *next;
     int color_pair;
-    float block_position[4][2];
+    int16_t block_position[4][2];
     char type_of_block;
 };
 
-static float x_offset = 100;
-static float y_offset = 6;
+struct tetrominos_in_play {
+    struct tetromino *head_tetromino;
+};
 
-static float I_BLOCK_COORDINATES[4][2] = {{100, 4}, 
-                                        {100, 5}, 
-                                        {100, 6}, 
-                                        {100, 7}
-                                        };
+static int x_offset = 100;
+static int y_offset = 6;
 
-static float O_BLOCK_COORDINATES[4][2] = {{100, 5}, 
-                                        {102, 5}, 
-                                        {100, 6}, 
-                                        {102, 6}
-                                        };
-
-static float T_BLOCK_COORDINATES[4][2] = {{98, 6}, 
-                                        {102, 6}, 
-                                        {100, 6}, 
-                                        {100, 7}
-                                        };
-
-static float S_BLOCK_COORDINATES[4][2] = {{102, 5}, 
-                                        {100, 5},
-                                        {100, 6}, 
-                                        {98, 6}
-                                        };
-
-static float Z_BLOCK_COORDINATES[4][2] = {{98, 5}, 
-                                        {100, 5}, 
-                                        {100, 6}, 
-                                        {102, 6}
-                                        };
-
-static float J_BLOCK_COORDINATES[4][2] = {{100, 4}, 
-                                        {100, 5}, 
-                                        {100, 6}, 
-                                        {98, 6}
-                                        };
-
-static float L_BLOCK_COORDINATES[4][2] = {{100, 4}, 
-                                        {100, 5}, 
-                                        {100, 6}, 
-                                        {102, 6}
-                                        };
-
-
-static char types_of_blocks[7] = {'I', 'O', 'T', 'S', 'Z', 'J', 'L'};
-
-
-struct tetromino tetrominos[7];
-
-void default_tetrominos_create(void);
-
-void tetromino_initialize(int color, float coordinates[4][2]);
+static struct tetromino default_tetrominos[7] = {
+    [0] = {.next = NULL, .color_pair = I_BLOCK, .block_position = {{DEFAULT_X, DEFAULT_Y - 2}, {DEFAULT_X, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X, DEFAULT_Y + 1}}, .type_of_block = 'I'},
+    [1] = {.next = NULL, .color_pair = O_BLOCK, .block_position = {{DEFAULT_X, DEFAULT_Y - 1}, {DEFAULT_X + 2, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X + 2, DEFAULT_Y}}, .type_of_block = 'O'},
+    [2] = {.next = NULL, .color_pair = T_BLOCK, .block_position = {{DEFAULT_X - 2, DEFAULT_Y}, {DEFAULT_X + 2, DEFAULT_Y}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X, DEFAULT_Y + 1}}, .type_of_block = 'T'},
+    [3] = {.next = NULL, .color_pair = S_BLOCK, .block_position = {{DEFAULT_X + 2, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X - 2, DEFAULT_Y}}, .type_of_block = 'S'},
+    [4] = {.next = NULL, .color_pair = Z_BLOCK, .block_position = {{DEFAULT_X - 2, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X + 2, DEFAULT_Y}}, .type_of_block = 'Z'},
+    [5] = {.next = NULL, .color_pair = J_BLOCK, .block_position = {{DEFAULT_X, DEFAULT_Y - 2}, {DEFAULT_X, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X - 2, DEFAULT_Y}}, .type_of_block = 'J'},
+    [6] = {.next = NULL, .color_pair = L_BLOCK, .block_position = {{DEFAULT_X, DEFAULT_Y - 2}, {DEFAULT_X, DEFAULT_Y - 1}, {DEFAULT_X, DEFAULT_Y}, {DEFAULT_X + 2, DEFAULT_Y}}, .type_of_block = 'L'},
+};
 
 struct tetromino* new_tetromino_create(void);
 
 void tetromino_rotate(struct tetromino *block);
 
-void tetromino_move(struct tetromino *block, int direction);
+void tetromino_move(struct tetromino *block, uint8_t direction);
 
 void tetromino_display(struct tetromino *block);
 
-/*void display_all_tetrominos(struct tetromino *list_of_blocks);*/
-
 void tetromino_free(struct tetromino *block);
 
-int get_random_number(void);
+uint8_t get_random_number(void);
 
-void print_tetromino(struct tetromino *block);
+void tetromino_drop(struct tetromino *block);
 
 #endif

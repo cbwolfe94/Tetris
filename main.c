@@ -1,33 +1,17 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <time.h>
 #include "game.h"
 #include "tetromino.h"
 
 int main()
 {
+    int ch;
     int start_x, start_y, y_max, x_max;
 	start_x = start_y = 0;
-    /*
-    int ch;
-    default_tetrominos_create();
-    struct tetromino *test_block = new_tetromino_create();
-    printf("Original Tetromino\n");
-    print_tetromino(test_block);
-    printf("\n");
-    while(true) {
-        ch = getchar();
-        if (ch == 32) {
-            x_offset--;
-            printf("%f\n", x_offset);
-        }
-        if (ch == 'a'){
-            tetromino_move(test_block, 67);
-            tetromino_rotate(test_block);
-            printf("%f\n", x_offset);
-            //print_tetromino(test_block);
-        }
-    }*/
-    
+    clock_t start_time, current_time;
+    double time_elapsed;
+
     initscr();
     //cbreak();
     noecho();
@@ -46,13 +30,17 @@ int main()
     init_pair(6, COLOR_CYAN, COLOR_CYAN);
     init_pair(7, COLOR_WHITE, COLOR_WHITE);
 
-    default_tetrominos_create();
-
     struct tetromino *block = new_tetromino_create();
-
-    int ch;
-
+    
+    
+    start_time = clock(); 
     while(true) {
+        current_time = clock();
+        time_elapsed = (double)(current_time - start_time) / CLOCKS_PER_SEC;
+        if (time_elapsed > 0.5) {
+            tetromino_drop(block);
+            start_time = clock();
+        }
         erase();
         ch = wgetch(window);
         //printw("   %i", ch);
