@@ -18,6 +18,14 @@ struct tetromino *new_tetromino_create(void)
 
 void tetromino_rotate(struct tetromino *block)
 {
+    if (check_wall_collision(block, 'r')) {
+        return;
+    }
+
+    if (check_wall_collision(block, 'l')) {
+        return;
+    }
+    
     struct tetromino *temp_block = malloc(sizeof(struct tetromino));
 
     if (block->type_of_block == 'O') {
@@ -91,6 +99,8 @@ void tetromino_move(struct tetromino *block, uint8_t direction)
     }
     attroff(COLOR_PAIR(block->color_pair));
 }*/
+
+
 
 
 void tetromino_free(struct tetromino *block)
