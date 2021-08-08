@@ -31,6 +31,7 @@ struct tetris_game *game_init(void)
     new_game->current_level = 0;
     new_game->top_score = 0;
     new_game->current_score = 0;
+    new_game->gravity = GRAVITY_LEVEL[0];
 
     return new_game;
 }
@@ -164,18 +165,21 @@ void statistics_window_display(struct tetris_game *game)
 void main_game_loop(struct tetris_game *game)
 {
     int ch;
+    int current_tick;
     double time_elapsed;
-    clock_t start_time, current_time;
     game->current_block = new_tetromino_create();
     game->next_block = new_tetromino_create();
 
     //game->game_window = create_new_window(50, 50, 2, 70); 
     nodelay(game->game_window, true);
     notimeout(game->game_window, TRUE);
-    start_time = clock();
 
     while(true) {
-
+        current_tick = get_gravity_tick(game);
+        if (current_tick == 0) {
+            tetromino_move(game->current_block, 66);
+        }
+        //gravity_tick(game);
         game_window_display(game);
         score_window_display(game);
         current_level_window_display(game);
@@ -196,4 +200,17 @@ void main_game_loop(struct tetris_game *game)
 
     }
     endwin();
+}
+
+int get_gravity_tick(struct tetris_game *game) {
+    int gravity;
+    gravity = game->gravity;
+    if (gravity == 0) {
+        game->gravity = GRAVITY_LEVEL[game->current_level];
+        return 0;
+    }
+    else {
+        game->gravity -= 1;
+        return gravity;
+    }
 }

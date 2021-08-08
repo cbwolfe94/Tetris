@@ -32,6 +32,14 @@
 #define STATISTICS_WINDOW_START_X 40
 #define STATISTICS_WINDOW_START_Y 12
 
+static const int GRAVITY_LEVEL[20] = {
+// 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,
+  50, 48, 46, 44, 42, 40, 38, 36, 34, 32,
+//10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  30, 28, 26, 24, 22, 20, 16, 12,  8,  4
+};
+
+//static int level_threshold
 struct tetris_game {
     WINDOW *game_window;
     WINDOW *score_window; 
@@ -46,6 +54,7 @@ struct tetris_game {
     int current_level;
     int current_score;
     int top_score;
+    int gravity;
 };
 
 void game_window_display(struct tetris_game *game);
@@ -68,5 +77,6 @@ void main_game_loop(struct tetris_game *game);
 
 WINDOW *create_new_window(int height, int width, int start_y, int start_x);
 
+int get_gravity_tick(struct tetris_game *game);
 
 #endif
