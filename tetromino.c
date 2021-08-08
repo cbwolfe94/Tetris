@@ -27,6 +27,8 @@ void tetromino_rotate(struct tetromino *block)
     for (int i = 0; i < 4; i++) {
         temp_block->block_position[i][0] = (block->block_position[i][0] - x_offset)*0 + (block->block_position[i][1] - y_offset)*(-2);
         temp_block->block_position[i][1] = ((block->block_position[i][0] - x_offset)*2)/4 + (block->block_position[i][1] - y_offset)*(0);
+    }
+    for (int i = 0; i < 4; i++) {
         block->block_position[i][0] = temp_block->block_position[i][0] + x_offset;
         block->block_position[i][1] = temp_block->block_position[i][1] + y_offset;
     }
@@ -52,18 +54,27 @@ void tetromino_move(struct tetromino *block, uint8_t direction)
             break;
 
         case 67:
-            for (uint8_t i = 0; i < 4; i++) {
-                
-                block->block_position[i][0] = block->block_position[i][0] + 2;
-            } 
+            if (check_wall_collision(block, 'r')) {
+                break;
+            }
+            else {
+                for (uint8_t i = 0; i < 4; i++) {
+                    block->block_position[i][0] = block->block_position[i][0] + 2;
+                }
+            }
             x_offset = x_offset + 2;
             break;
 
         case 68:
-            for (uint8_t i = 0; i < 4; i++) {
-                block->block_position[i][0] = block->block_position[i][0] - 2;
-                
-            } 
+            if (check_wall_collision(block, 'l')) {
+                break;
+            }
+            else {
+                for (uint8_t i = 0; i < 4; i++) {
+                    block->block_position[i][0] = block->block_position[i][0] - 2;
+                }
+            }
+            
             x_offset = x_offset - 2;
             break;
 
@@ -96,7 +107,31 @@ uint8_t get_random_number(void)
 
 void tetromino_drop(struct tetromino *block)
 {
-    tetromino_move(block, 66);
+    
+}
+
+bool check_wall_collision(struct tetromino *block, char wall)
+{
+    switch (wall) {
+        case 'l':
+            for (int i = 0; i < 4; i++) {
+                if (block->block_position[i][0] == 1) {
+                    return true;
+                }
+            }
+            return false;
+        
+        case 'r':
+            for (int i = 0; i < 4; i++) {
+                if (block->block_position[i][0] == 47) {
+                return true;
+            }
+        }
+            return false;
+
+        default:
+            return true;
+    }
 }
 
 void print_block(struct tetromino *block)

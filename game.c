@@ -184,22 +184,14 @@ void main_game_loop(struct tetris_game *game)
         statistics_window_display(game);
         doupdate();
         sleep_milli(10);
-        //current_time = clock();
-        //time_elapsed = (double)(current_time - start_time) / CLOCKS_PER_SEC;
-        /*
-        if (time_elapsed > 0.5) {
-            tetromino_drop(game->current_block);
-            start_time = clock();
-        }
-
         ch = wgetch(game->game_window);
         if (ch == 32) {
-            tetromino_rotate(game->block_in_play);
+            tetromino_rotate(game->current_block);
 
         }
         else {
-            tetromino_move(game->block_in_play, ch);
-        }*/
+            tetromino_move(game->current_block, ch);
+        }
         werase(game->game_window);
 
     }
