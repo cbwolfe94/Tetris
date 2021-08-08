@@ -72,14 +72,15 @@ void tetromino_move(struct tetromino *block, uint8_t direction)
     }
 }
 
-void tetromino_display(struct tetromino *block)
+/*void tetromino_display(struct tetris_game *game)
 {
     attron(COLOR_PAIR(block->color_pair));
     for (uint8_t i = 0; i < 4; ++i) {
             mvprintw(block->block_position[i][1], block->block_position[i][0], "[]");
     }
     attroff(COLOR_PAIR(block->color_pair));
-}
+}*/
+
 
 void tetromino_free(struct tetromino *block)
 {
@@ -89,7 +90,6 @@ void tetromino_free(struct tetromino *block)
 
 uint8_t get_random_number(void)
 {
-    srand(time(NULL));
     uint8_t random_number = rand();
     return random_number % 7;
 }
@@ -97,4 +97,14 @@ uint8_t get_random_number(void)
 void tetromino_drop(struct tetromino *block)
 {
     tetromino_move(block, 66);
+}
+
+void print_block(struct tetromino *block)
+{
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 2; j++) {
+            printf("%d ", block->block_position[i][j]);
+        }
+        printf("\n");
+    }
 }
