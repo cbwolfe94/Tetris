@@ -28,7 +28,7 @@ struct tetrominos_in_play {
     struct tetromino *head_tetromino;
 };
 
-static int x_offset = 15;
+static int x_offset = 25;
 static int y_offset = 6;
 
 static struct tetromino default_tetrominos[7] = {
@@ -52,6 +52,8 @@ void tetromino_move(struct tetromino *block, uint8_t direction);
 void tetromino_free(struct tetromino *block);
 
 uint8_t get_random_number(void);
+
+bool check_wall_collision(struct tetromino *block, char wall);
 
 void tetromino_drop(struct tetromino *block);
 
