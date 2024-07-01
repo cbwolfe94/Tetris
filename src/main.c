@@ -1,6 +1,8 @@
 #include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <ncurses.h>
 #include "game.h"
 #include "tetromino.h"
 
