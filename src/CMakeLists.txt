@@ -29,6 +29,7 @@ target_sources(${APP_NAME}
     PRIVATE
     main.c
     game/game.c
+    helpers/helpers.c
     tetromino/tetromino.c
 )
 
@@ -36,5 +37,7 @@ target_include_directories(${APP_NAME}
     PUBLIC
     ${CURSES_INCLUDE_PATH}
     game/
+    game/windows/
+    helpers/
     tetromino/
 )
