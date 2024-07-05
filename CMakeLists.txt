@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 set(CURSES_LIBRARY      "/usr/lib/x86_64-linux-gnu/libncurses.so")
 set(CURSES_INCLUDE_PATH "/usr/include/")
 set(CMAKE_TOOLCHAIN_FILE toolchain/gcc.cmake)
