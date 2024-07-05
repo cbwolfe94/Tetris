@@ -1,0 +1,16 @@
+#ifndef GAME_TYPES_H
+#define GAME_TYPES_H
+
+
+typedef enum
+{
+    GAME_WALL_START = 0,
+    GAME_WALL_LEFT = GAME_WALL_START,
+    GAME_WALL_RIGHT,
+    GAME_WALL_TOP,
+    GAME_WALL_BOTTOM,
+    GAME_WALL_COUNT,
+    GAME_WALL_INVALID
+} GameWall_t;
+
+#endif
