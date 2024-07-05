@@ -1,12 +1,17 @@
 #include <unistd.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
 #include "game.h"
 #include "tetromino.h"
 
-int main()
+/**
+ * @brief Entry point of application
+ * 
+ * @return int 
+ */
+int main(void)
 {
     srand(time(NULL));
     initscr();
@@ -14,9 +19,10 @@ int main()
     noecho();
     keypad(stdscr, TRUE);
     curs_set(0);
-    colors_init();
-    struct tetris_game *new_game = game_init();
-    main_game_loop(new_game);   
+    colorsInit();
+    gameInit();
+    gameLoop();   
     endwin();
+
     return 0;
 }

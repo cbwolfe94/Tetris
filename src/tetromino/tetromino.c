@@ -2,31 +2,121 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <stdint.h>
+#include <assert.h>
+#include <string.h>
+#include <stdbool.h>
+#include "game_types.h"
+#include "windows_defs.h"
+#include "tetromino_types.h"
+#include "helpers.h"
 #include "tetromino.h"
 
-struct tetromino *new_tetromino_create(void)
-{
-    uint8_t index = get_random_number();
+static uint16_t globalOffsetX = 25;
+static uint16_t globalOffsetY = 6;
+
+static const Tetromino_t defaultTetrominos[7] = {
+    [TETROMINO_TYPE_I] = {
+        .type = TETROMINO_TYPE_I,
+        .colorPair = COLOR_RED, 
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 2}, 
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE + 1}
+            }
+    },
     
-    struct tetromino *new_block = malloc(sizeof(struct tetromino));
-    new_block->next = NULL;
-    new_block->color_pair = default_tetrominos[index].color_pair;
-    memcpy(new_block->block_position, default_tetrominos[index].block_position, 4*2*sizeof(int16_t));
-    new_block->type_of_block = default_tetrominos[index].type_of_block;
-    return new_block;
+    [TETROMINO_TYPE_O] = {
+        .type = TETROMINO_TYPE_O,
+        .colorPair = COLOR_GREEN,
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE - 2, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE + 2, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE + 1}
+            }
+    },
+    
+    [TETROMINO_TYPE_T] = {
+        .type = TETROMINO_TYPE_T,
+        .colorPair = COLOR_YELLOW,
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE + 2, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE - 2, DEFAULT_Y_COORDINATE}
+            },
+    },
+
+    [TETROMINO_TYPE_S] = {
+        .type = TETROMINO_TYPE_S,
+        .colorPair = COLOR_MAGENTA,
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE - 2, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE + 2, DEFAULT_Y_COORDINATE}
+            },
+        },
+    
+    [TETROMINO_TYPE_Z] = {
+        .type = TETROMINO_TYPE_Z,
+        .colorPair = COLOR_CYAN, 
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 2},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE - 2, DEFAULT_Y_COORDINATE}
+            }
+        },
+    
+    [TETROMINO_TYPE_J] = {
+        .type = TETROMINO_TYPE_J,
+        .colorPair = COLOR_WHITE,
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 2},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE + 2, DEFAULT_Y_COORDINATE}
+            }
+        },
+    
+    [TETROMINO_TYPE_L] = {
+        .type = TETROMINO_TYPE_L,
+        .colorPair = COLOR_GREEN,
+        .blockPositions = {
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE + 2, DEFAULT_Y_COORDINATE - 1},
+            {DEFAULT_X_COORDINATE, DEFAULT_Y_COORDINATE},
+            {DEFAULT_X_COORDINATE + 2, DEFAULT_Y_COORDINATE}
+        }
+    },
+};
+
+Tetromino_t getNewTetromino(void)
+{
+    TetrominoType_t type = getRandomNumber();
+    Tetromino_t newTetromino;
+
+    memcpy(&newTetromino, &defaultTetrominos[type], sizeof(Tetromino_t));
+    return newTetromino;
 }
 
-void tetromino_rotate(struct tetromino *block)
+void rotateTetromino(Tetromino_t *tetromino)
 {
-    if (check_wall_collision(block, 'r')) {
-        return;
-    }
-
-    if (check_wall_collision(block, 'l')) {
+    if (tetromino->type == TETROMINO_TYPE_O)
+    {
         return;
     }
     
-    struct tetromino *temp_block = malloc(sizeof(struct tetromino));
+    if (checkWallCollision(tetromino, GAME_WALL_RIGHT) || checkWallCollision(tetromino, GAME_WALL_LEFT))
+    {
+        return;
+    }
+    
+    // TODO: Investigate this
+
+    /* struct tetromino *temp_block = malloc(sizeof(struct tetromino));
 
     if (block->type_of_block == 'O') {
         return;
@@ -40,50 +130,95 @@ void tetromino_rotate(struct tetromino *block)
         block->block_position[i][0] = temp_block->block_position[i][0] + x_offset;
         block->block_position[i][1] = temp_block->block_position[i][1] + y_offset;
     }
-    free(temp_block);
+     */
     return;
 }
 
-void tetromino_move(struct tetromino *block, uint8_t direction)
+/**
+ * @brief Moves a given tetromino horizontally
+ * 
+ * @param tetromino Tetromino pointer
+ * @param pixelTranslationDistance Distance of pixel to be translated 
+ */
+static void moveTetrominoHorizontal(Tetromino_t *tetromino, const int8_t pixelTranslationDistance)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        tetromino->blockPositions[i][1] += pixelTranslationDistance;   
+    }
+    globalOffsetX += pixelTranslationDistance;
+}
+
+/**
+ * @brief Moves a given tetromino vertically
+ * 
+ * @param tetromino Tetromino pointer
+ * @param pixelTranslationDistance Distance of pixel to be translated 
+ */
+static void moveTetrominoVertical(Tetromino_t *tetromino, const int8_t pixelTranslationDistance)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        tetromino->blockPositions[i][0] += pixelTranslationDistance;   
+    }
+    globalOffsetY += pixelTranslationDistance;
+}
+
+/**
+ * @brief Moves tetromino one unit
+ * 
+ * @param tetromino Tetromino pointer
+ * @param direction Direction to move tetromino
+ */
+void moveTetromino(Tetromino_t *tetromino, const TetrominoDirection_t direction)
 {
     switch (direction) {
-        case 65:
-            for (uint8_t i = 0; i < 4; i++) {
-                block->block_position[i][1] = block->block_position[i][1] - 1;   
+        case TETROMINO_DIRECTION_DOWN:
+            if (checkWallCollision(tetromino, GAME_WALL_BOTTOM) /* OR(||) check for collision with filled game grid */)
+            {
+                // Place piece on game grid
+                // Generate event
+                return;
             }
-            y_offset--;
+            else
+            {
+                moveTetrominoVertical(tetromino, -1);
+            }
         break;
 
-        case 66:
-            for (uint8_t i = 0; i < 4; i++) {
-                block->block_position[i][1] = block->block_position[i][1] + 1;
+        // This is for testing
+        case TETROMINO_DIRECTION_UP:
+            if (checkWallCollision(tetromino, GAME_WALL_TOP))
+            {
+                return;
             }
-            y_offset++;
+            else
+            {
+                moveTetrominoVertical(tetromino, 1);
+            }
             break;
 
-        case 67:
-            if (check_wall_collision(block, 'r')) {
-                break;
+        case TETROMINO_DIRECTION_RIGHT:
+            if (checkWallCollision(tetromino, GAME_WALL_RIGHT))
+            {
+                return;
             }
-            else {
-                for (uint8_t i = 0; i < 4; i++) {
-                    block->block_position[i][0] = block->block_position[i][0] + 2;
-                }
+            else
+            {
+                moveTetrominoHorizontal(tetromino, -2);
             }
-            x_offset = x_offset + 2;
             break;
 
-        case 68:
-            if (check_wall_collision(block, 'l')) {
+        case TETROMINO_DIRECTION_LEFT:
+            if (checkWallCollision(tetromino, GAME_WALL_LEFT))
+            {
                 break;
             }
-            else {
-                for (uint8_t i = 0; i < 4; i++) {
-                    block->block_position[i][0] = block->block_position[i][0] - 2;
-                }
+            else
+            {
+                moveTetrominoHorizontal(tetromino, 2);
             }
             
-            x_offset = x_offset - 2;
             break;
 
         default:
@@ -91,64 +226,96 @@ void tetromino_move(struct tetromino *block, uint8_t direction)
     }
 }
 
-/*void tetromino_display(struct tetris_game *game)
+/**
+ * @brief Drops tetromino by one vertical unit down
+ * 
+ * @param tetromino 
+ */
+void dropTetromino(Tetromino_t *tetromino)
 {
-    attron(COLOR_PAIR(block->color_pair));
-    for (uint8_t i = 0; i < 4; ++i) {
-            mvprintw(block->block_position[i][1], block->block_position[i][0], "[]");
+    moveTetromino(tetromino, TETROMINO_DIRECTION_DOWN);
+}
+/**
+ * @brief Checks to see if a given tetromino is going to collide with a given coordinate along the Y axis
+ * 
+ * @param tetromino Tetromino pointer
+ * @param collisionCoordinate Coordinate to check collision against
+ * @return true If tetromino is going to collide with given collision coordinate 
+ * @return false If tetromino is not going to collide with given collision coordinate
+ */
+static bool checkVerticalBlockCollision(const Tetromino_t *tetromino, const uint16_t collisionCoordinate_Y)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        if (tetromino->blockPositions[0][i] == collisionCoordinate_Y)
+        {
+            return true;
+        }
     }
-    attroff(COLOR_PAIR(block->color_pair));
-}*/
-
-
-
-
-void tetromino_free(struct tetromino *block)
-{
-    free(block);
-    return;
-}
-
-uint8_t get_random_number(void)
-{
-    uint8_t random_number = rand();
-    return random_number % 7;
-}
-
-void tetromino_drop(struct tetromino *block)
-{
     
+    return false;
 }
 
-bool check_wall_collision(struct tetromino *block, char wall)
+/**
+ * @brief Checks to see if a tetromino is going to collide with a given coordinate along the X axis
+ * 
+ * @param tetromino Tetromino pointer
+ * @param collisionCoordinate Coordinate to check collision against
+ * @return true If tetromino is going to collide with given collision coordinate 
+ * @return false If tetromino is not going to collide with given collision coordinate
+ */
+static bool checkHorizontalTetrominoCollision(const Tetromino_t *tetromino, const uint16_t collisionCoordinate_X)
+{
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        if (tetromino->blockPositions[i][0] == collisionCoordinate_X)
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/**
+ * @brief Checks collision between tetromino and specified wall
+ * 
+ * @param tetromino 
+ * @param wall 
+ * @return true 
+ * @return false 
+ */
+bool checkWallCollision(const Tetromino_t *tetromino, const GameWall_t wall)
 {
     switch (wall) {
-        case 'l':
-            for (int i = 0; i < 4; i++) {
-                if (block->block_position[i][0] == 1) {
-                    return true;
-                }
-            }
-            return false;
+        case GAME_WALL_LEFT:
+            return checkHorizontalTetrominoCollision(tetromino, 1);
+            break;
         
-        case 'r':
-            for (int i = 0; i < 4; i++) {
-                if (block->block_position[i][0] == 47) {
-                return true;
-            }
-        }
-            return false;
+        case GAME_WALL_RIGHT:
+            return checkHorizontalTetrominoCollision(tetromino, 47);
+            break;
+
+        case GAME_WALL_TOP:
+            return checkVerticalBlockCollision(tetromino, 1);
+            break;
+
+        case GAME_WALL_BOTTOM:
+            return checkVerticalBlockCollision(tetromino, 100);
+            break;
 
         default:
             return true;
     }
 }
 
-void print_block(struct tetromino *block)
+void printTetromino(const Tetromino_t *tetromino)
 {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 2; j++) {
-            printf("%d ", block->block_position[i][j]);
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        for (uint8_t j = 0; j < 2; j++)
+        {
+            printf("%d ", tetromino->blockPositions[i][j]);
         }
         printf("\n");
     }
