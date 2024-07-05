@@ -1,0 +1,37 @@
+#ifndef WINDOWS_DEFS_H
+#define WINDOWS_DEFS_H
+
+#define GAME_WINDOW_HEIGHT              50
+#define GAME_WINDOW_WIDTH               50
+#define GAME_WINDOW_START_X             70
+#define GAME_WINDOW_START_Y             5
+
+#define SCORE_WINDOW_HEIGHT             15
+#define SCORE_WINDOW_WIDTH              30
+#define SCORE_WINDOW_START_X            120
+#define SCORE_WINDOW_START_Y            1
+
+#define CURRENT_LEVEL_WINDOW_HEIGHT     5
+#define CURRENT_LEVEL_WINDOW_WIDTH      30
+#define CURRENT_LEVEL_WINDOW_START_X    120
+#define CURRENT_LEVEL_WINDOW_START_Y    29
+
+#define NEXT_BLOCK_WINDOW_HEIGHT        13
+#define NEXT_BLOCK_WINDOW_WIDTH         30
+#define NEXT_BLOCK_WINDOW_START_X       120
+#define NEXT_BLOCK_WINDOW_START_Y       16
+
+#define LINES_CLEARED_WINDOW_HEIGHT     4
+#define LINES_CLEARED_WINDOW_WIDTH      50
+#define LINES_CLEARED_WINDOW_START_X    70
+#define LINES_CLEARED_WINDOW_START_Y    1
+
+#define STATISTICS_WINDOW_WIDTH         30
+#define STATISTICS_WINDOW_HEIGHT        43
+#define STATISTICS_WINDOW_START_X       40
+#define STATISTICS_WINDOW_START_Y       12
+
+#define DEFAULT_X_COORDINATE            25
+#define DEFAULT_Y_COORDINATE            6
+
+#endif
