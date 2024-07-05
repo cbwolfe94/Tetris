@@ -1,12 +1,12 @@
 SHELL := /bin/bash
 
-.PHONY: run
-run: 
-	./build/src/application
-
 .PHONY: build
 build:
 	cmake --build build
+
+.PHONY: run
+run: 
+	./build/src/application
 
 .PHONY: removebuild
 removebuild:
